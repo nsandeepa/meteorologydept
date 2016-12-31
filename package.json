@@ -1,0 +1,24 @@
+{
+  "name": "meteorologydept",
+  "version": "1.0.0",
+  "description": "Record managment system for meteorology department",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Nilupul Sandeepa",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^1.0.1",
+    "ejs": "^2.5.5",
+    "express": "^4.14.0",
+    "express-mysql-session": "^1.2.0",
+    "helmet": "^3.2.0",
+    "mysql": "^2.12.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "uuid": "^3.0.1",
+    "validator": "^6.2.0",
+    "xss-filters": "^1.2.7"
+  }
+}
