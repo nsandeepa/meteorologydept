@@ -11,11 +11,15 @@ var LocalStrategy = require('passport-local');
 var mysql_db_operation = require(path.join(__dirname, '/mysql_db_operation'));
 var User_Login = require(path.join(__dirname, '/user')).User_Login;
 
-
+//passport initializing function
 function passportAuth_init(passport) {
+
+    //serialize a user in to a session
     passport.serializeUser(function(user, done) {
         done(null, user);
     });
+
+    //deserialize a user from a session
     passport.deserializeUser(function(user, done) {
         mysql_db_operation.search_user(user.username, function(err, user) {
             if(err) {
@@ -25,6 +29,8 @@ function passportAuth_init(passport) {
             }
         });
     });
+
+    //passport local strategy to authenticate users
     passport.use('login', new LocalStrategy({},
         function(username, password, done) {
             mysql_db_operation.login(username, password, function(err, db_user) {
@@ -42,4 +48,5 @@ function passportAuth_init(passport) {
     );
 }
 
+//exports as a module
 module.exports.passportAuth_init = passportAuth_init;
