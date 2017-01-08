@@ -28,7 +28,10 @@ var config_main_db_pool_con_options = {
     waitForConnections: true
 };
 
+//session secret
 var config_session_secret = '43nkjhiouh@*&(9384h3(4983h49ksjd8hfp_mnznxcQ@!';
+
+//exports modules
 module.exports.config_server_port = config_server_port;
 module.exports.config_server_ip = config_server_ip;
 module.exports.config_session_pool_con_options = config_session_pool_con_options;
