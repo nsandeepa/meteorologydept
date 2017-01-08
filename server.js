@@ -13,7 +13,6 @@ var mysql = require('mysql');
 var session = require('express-session');
 var sessionStore = require('express-mysql-session')(session);
 var passport = require('passport');
-var compress = require('compression');
 var bodyparser = require('body-parser');
 
 //custom modules
@@ -35,6 +34,7 @@ app.use(helmet({
     }
 }));
 
+//initializing passport strategies
 authentication.passportAuth_init(passport);
 
 //session middleware
@@ -48,21 +48,24 @@ app.use(session({
             return hashGen.getHash_Secret().crypted;
         },
         cookie: {
-            maxAge: 120000
+            maxAge: 1800000
         }
     }
 ));
 
+//passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(compress());
-
+//body parser middleware to parse user data
 app.use(bodyparser.urlencoded({extended: false}));
 
+//including custom router middleware
 app.use(router);
 
+//using server in a clustered environment
 if(cluster.isMaster) {
+    //creating child processes
     var numClusters = 8;
     for (var i = 0; i < numClusters; i++) {
         cluster.fork();
@@ -76,6 +79,7 @@ if(cluster.isMaster) {
     console.log('Number of Node Clusters : ' + numClusters
                     + '\n--------------------------');
 } else {
+    //server listening on child processes
     app.listen(config.config_server_port, config.config_server_ip, function (err) {
         if(err) {
             console.log(err.message);
