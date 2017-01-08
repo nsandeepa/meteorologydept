@@ -11,6 +11,7 @@ var uuid = require('uuid');
 var algorithm = 'aes-256-ctr';
 var secret = uuid.v4().toString();
 
+//hash generation function
 function getHash_Secret(){
     var id = uuid.v4();
     var cipher = crypto.createCipher(algorithm, secret);
@@ -22,4 +23,6 @@ function getHash_Secret(){
         secret: secret
     };
 }
+
+//exports as a module
 module.exports.getHash_Secret = getHash_Secret;
