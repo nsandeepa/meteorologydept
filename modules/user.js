@@ -1,10 +1,12 @@
 /**
  * Created by nilupul on 12/31/16.
  */
-var User_Login = function (_sessionID, _fname, _sessionSecret) {
-    this.session_id = _sessionID;
+var User_Login = function (_fname, _username) {
     this.fname = _fname;
-    this.session_secret = _sessionSecret;
+    this.username = _username;
 };
 
-module.exports = User_Login;
+var User_SignUp = function(_fname, _lname, _) {
+
+}
+module.exports.User_Login = User_Login;

@@ -12,12 +12,16 @@ var helmet = require('helmet');
 var mysql = require('mysql');
 var session = require('express-session');
 var sessionStore = require('express-mysql-session')(session);
+var passport = require('passport');
+var compress = require('compression');
+var bodyparser = require('body-parser');
 
 //custom modules
 var router = require(path.join(__dirname, '/routes/router'));
 var config = require(path.join(__dirname, '/configurations/config'));
 var hashGen = require(path.join(__dirname, '/modules/hashgenerator'));
 var mysql_db_operation = require(path.join(__dirname, '/modules/mysql_db_operation'));
+var authentication = require(path.join(__dirname, '/modules/authenticate'));
 
 //app
 var app = express();
@@ -31,18 +35,31 @@ app.use(helmet({
     }
 }));
 
+authentication.passportAuth_init(passport);
+
 //session middleware
 app.use(session({
         key: 'sessionID',
         secret: config.config_session_secret,
         store: new sessionStore({}, mysql_db_operation.session_con_pool),
         resave: false,
-        saveUninitialized: false,
-        genid: function () {
+        saveUninitialized: true,
+        genid: function (request) {
             return hashGen.getHash_Secret().crypted;
+        },
+        cookie: {
+            maxAge: 120000
         }
     }
 ));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(compress());
+
+app.use(bodyparser.urlencoded({extended: false}));
+
 app.use(router);
 
 if(cluster.isMaster) {
