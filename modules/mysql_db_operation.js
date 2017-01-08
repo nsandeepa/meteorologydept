@@ -14,10 +14,13 @@ var config = require('../configurations/config');
 //SALT Config
 var SALT_FACTOR = 10;
 
+//creating main pool connection
 var main_con_pool = mysql.createPool(config.config_main_db_pool_con_options);
 
+//creating pool connection for sessions
 var session_con_pool = mysql.createPool(config.config_session_pool_con_options);
 
+//asynchronous function to use in login operation
 function login(username, password, callback) {
     main_con_pool.getConnection(function (err, connection) {
         if (err) {
@@ -50,6 +53,7 @@ function login(username, password, callback) {
     });
 }
 
+//asynchronous function to use for deserializing user
 function search_user(username, callback) {
     main_con_pool.getConnection(function (err, connection) {
         if (err) {
@@ -71,6 +75,8 @@ function search_user(username, callback) {
         }
     });
 }
+
+//exports modules
 module.exports.login = login;
 module.exports.search_user = search_user;
 module.exports.session_con_pool = session_con_pool;
