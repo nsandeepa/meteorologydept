@@ -76,7 +76,44 @@ function search_user(username, callback) {
     });
 }
 
+//asynchronous function to use for signing up new users
+function add_user(user, callback) {
+    main_con_pool.getConnection(function (err, connection) {
+        if (err) {
+            callback(err, null);
+        } else {
+            bcrypt.genSalt(SALT_FACTOR, {}, function(err, salt) {
+                bcrypt.hash(user.password, salt, function(err, hashedpassword) {
+                    user.password = hashedpassword;
+                    connection.query('INSERT INTO user VALUES(\''+ user.username + '\', \'' + user.role + '\', \'' + user.station + '\', \'' + user.fname + '\', \'' + user.lname + '\', \'' + user.password + '\', 0);', function (err, rows) {
+                        if (err) {
+                            callback(err, null);
+                        } else {
+                            if (rows.affectedRows === 0) {
+                                connection.release();
+                                callback(null, false);
+                            } else {
+                                connection.release();
+                                callback(null, { status: rows});
+                            }
+                        }
+                    });
+                });
+            });
+        }
+    });
+}
+function add_record(record, callback) {
+    main_con_pool.getConnection(function(err, connection) {
+        if(err) {
+            callback(err, null);
+        } else {
+            connection.query('INSERT INTO record')
+        }
+    });
+}
 //exports modules
 module.exports.login = login;
 module.exports.search_user = search_user;
+module.exports.add_user = add_user;
 module.exports.session_con_pool = session_con_pool;

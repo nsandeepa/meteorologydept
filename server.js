@@ -44,7 +44,7 @@ app.use(session({
         store: new sessionStore({}, mysql_db_operation.session_con_pool),
         resave: false,
         saveUninitialized: true,
-        genid: function (request) {
+        genid: function () {
             return hashGen.getHash_Secret().crypted;
         },
         cookie: {

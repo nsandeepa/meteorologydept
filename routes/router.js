@@ -25,10 +25,19 @@ router.get('/login', function(request, response) {
 });
 router.post('/login', function(reqest, response, next) {
         console.log('Request Served By PID : ' + process.pid);
+
         next();
     }, passport.authenticate('login', {
         successRedirect: '/',
         failureRedirect: '/login'
+    })
+);
+router.get('/signup', function(request, response) {
+    response.sendFile(path.join(__dirname, '/../public/signup.html'));
+});
+router.post('/signup', passport.authenticate('signup', {
+        successRedirect: '/',
+        failureRedirect: '/signup'
     })
 );
 router.get('/logout', function(request, response, next) {

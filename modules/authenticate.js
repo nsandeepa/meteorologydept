@@ -10,6 +10,7 @@ var LocalStrategy = require('passport-local');
 //custom modules
 var mysql_db_operation = require(path.join(__dirname, '/mysql_db_operation'));
 var User_Login = require(path.join(__dirname, '/user')).User_Login;
+var User_SignUp = require(path.join(__dirname, '/user')).User_SignUp;
 
 //passport initializing function
 function passportAuth_init(passport) {
@@ -42,6 +43,24 @@ function passportAuth_init(passport) {
                 } else {
                     var user = new User_Login(db_user.fname, db_user.username);
                     done(null, user);
+                }
+            });
+        })
+    );
+    //passport local strategy to signup new users
+    passport.use('signup', new LocalStrategy({
+            passReqToCallback: true
+        },
+        function(request, username, password, done) {
+            var new_user = new User_SignUp(request.body.username, request.body.role, request.body.station, request.body.fname, request.body.lname, request.body.password);
+            mysql_db_operation.add_user(new_user, function(err, result) {
+                if(err) {
+                    console.log(err);
+                    done(err);
+                } else if(!result) {
+                    done(null, false);
+                } else {
+                    done(null, new_user);
                 }
             });
         })
