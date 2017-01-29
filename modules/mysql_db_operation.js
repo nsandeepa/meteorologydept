@@ -103,15 +103,6 @@ function add_user(user, callback) {
         }
     });
 }
-function add_record(record, callback) {
-    main_con_pool.getConnection(function(err, connection) {
-        if(err) {
-            callback(err, null);
-        } else {
-            connection.query('INSERT INTO record')
-        }
-    });
-}
 //exports modules
 module.exports.login = login;
 module.exports.search_user = search_user;
